@@ -5,11 +5,65 @@
 __author__ = "Mikey Garcia, @gikeymarcia"
 
 import pydymenu
-from pydymenu import fzf as fuzzy
+import pytest
 
 
-def test_fzf_creation():
+def test_has_bin():
+    assert pydymenu.has_bin("fzf") == True
+    assert pydymenu.has_bin(None) == False
+    assert pydymenu.has_bin("printf") == True
+
+
+def test_unavilable_package(monkeypatch):
+    monkeypatch.setenv("PATH", "")
+    assert pydymenu.fzf().available == False
+
+
+def test_avilable_package():
+    assert pydymenu.fzf().available == True
+
+
+def test_menu_modes_all_missing(monkeypatch):
+    monkeypatch.setenv("PATH", "")
+    assert pydymenu.Menu().present() == {
+        "fzf": False,
+        "rofi": False,
+        "dmenu": False,
+    }
+
+
+def test_menu_generic(monkeypatch):
+    monkeypatch.setenv("PATH", "")
+    menu = pydymenu.Menu()
+    assert menu.present() == {
+        "fzf": False,
+        "rofi": False,
+        "dmenu": False,
+    }
+
+
+def test_fzf_default_prompt():
     fzf = pydymenu.fzf()
-    print(type(fzf))
-    print(type(pydymenu))
-    assert fzf() == "running"
+    assert fzf.prompt == " > "
+
+
+@pytest.mark.parametrize(
+    "prompt_val, except_type",
+    [
+        ([], TypeError),
+        (type(str), TypeError),
+    ],
+)
+def test_fzf_bad_prompt(prompt_val, except_type):
+    with pytest.raises(TypeError) as except_info:
+        fzf = pydymenu.fzf(prompt=prompt_val)
+        print(fzf.prompt)
+    assert except_info.type == except_type
+
+
+def test_set_fzf_prompt():
+    fzf = pydymenu.fzf(prompt="ready")
+    assert fzf.prompt == "ready"
+
+
+# vim: set foldlevel=2:
