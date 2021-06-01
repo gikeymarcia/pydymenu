@@ -71,7 +71,7 @@ class Menu:
     @staticmethod
     def _is_iterable(unknown_iterablity_obj):
         try:
-            iterator = iter(unknown_iterablity_obj)
+            _ = iter(unknown_iterablity_obj)
         except TypeError:
             raise TypeError(
                 "Must send an iterable object.\n"
