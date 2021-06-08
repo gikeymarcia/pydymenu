@@ -10,7 +10,6 @@ if __name__ == "__main__":
     fzf = pydymenu.fzf(prompt="ready: ", args=["-m"])
     selction = fzf(
         ["one", "two", "three", "twins", "twinkies", "cottonwood"],
-        grep_query="tw",
     )
     print(selction)
 

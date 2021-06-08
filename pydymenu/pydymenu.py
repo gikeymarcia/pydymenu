@@ -19,9 +19,11 @@ def has_bin(binary_name):
 
 
 class fzf:
-    def __init__(self, prompt=None, args=None):
+    def __init__(self, items, prompt=None, args=None):
         self.prompt = Menu.resolve_prompt(prompt)
         self.available = has_bin("fzf")
+        if self.available:
+            self.__call__()
 
     def _fzf_as_grep(self, collection, query: str):
         collection = Menu._is_iterable(collection)
