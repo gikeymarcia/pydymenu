@@ -1,6 +1,14 @@
-bumpversion
+# testing
+pytest
+
+# dev tooling
 pynvim
 black
-pytest
-# Editable Git install with no remote (pydymenu==0.0.1)
--e .
+bumpversion
+# https://pypi.org/project/bumpversion/
+
+# pip install current project
+--editable .
+
+# publishing packages
+twine

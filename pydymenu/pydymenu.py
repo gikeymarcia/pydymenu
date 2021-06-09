@@ -18,7 +18,6 @@ def has_bin(binary_name):
 
 def fzf(list_of_items, prompt=None, multi=False):
     _fzf_dict = {
-        # unused
         "prompt": prompt,
         "multi": multi,
     }
@@ -26,7 +25,6 @@ def fzf(list_of_items, prompt=None, multi=False):
 
 
 def _run_fzf_with_list(list_of_items, **kwargs):
-    # input_items = newline_joined_bytestream(list_of_items)
     options = process_opts(kwargs)
     _fzf_process = sp.run(
         ["fzf"] + options,
@@ -38,7 +36,6 @@ def _run_fzf_with_list(list_of_items, **kwargs):
 
 def process_stdout(completed_process, multi=False):
     if completed_process.returncode != 0:
-        # return None on unsuccessful runs
         return None
     output_list = completed_process.stdout.decode().strip().split("\n")
     # standard_err = completed_process.stderr
@@ -53,28 +50,29 @@ def process_stdout(completed_process, multi=False):
 def newline_joined_bytestream(menu_items):
     line_return, new_line = "\r", "\n"
 
-    def ready_to_join(list_entry):
-        if new_line in list_entry or line_return in list_entry:
-            err = f"Newlines not allowed within items. Found in\n{list_entry}"
+    def ready_to_join(list_item):
+        if new_line in list_item or line_return in list_item:
+            err = f"Newlines not allowed within items. Found in\n{list_item}"
             raise ValueError(err)
         else:
-            return str(list_entry)
+            return str(list_item)
 
-    strings = [ready_to_join(element) for element in menu_items]
+    strings = [ready_to_join(i) for i in menu_items]
     return "\n".join(strings).encode("utf-8")
 
 
 def process_opts(options_dict):
+    """Takes a dictionary of fzf options and returns the command line flags."""
     print(f"opts: {options_dict}")
     fzf_flags = []
-    # prompt
-    prompt = options_dict.get("prompt", None)
-    if prompt:
+    if prompt := options_dict.get("prompt", None):
         fzf_flags.extend(["--prompt", prompt])
     # mutli-select
     multi = options_dict.get("multi", None)
     multi_mode = "--multi" if multi else "--no-multi"
     fzf_flags.append(multi_mode)
+    # TODO: preview
+    # TODO: print_query
     print(f"adds: {fzf_flags}")
     return fzf_flags
 
