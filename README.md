@@ -19,3 +19,15 @@ if selection:
 else:
     print("no selection made")
 ```
+
+### Work in Progress
+
+The initial release is a proof-of-concept that only covers basic `fzf` usage but 
+is most of the use case I need. Biggest missing feature is `--preview` and will 
+be added. I'm trying to be similar to `iterfzf` but am not constraining myself 
+completely to his design decisions.
+
+**Next big thing:** Support for _other_ menu-ing systems
+
++ `pydymenu.dmenu(['one', 'two', 'three'], prompt='Pick a number: ')`{.python}
++ `pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')`{.python}
