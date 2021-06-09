@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 import pydymenu
 
-print("in action")
+print("TESTING USAGE")
 
 my_opts = ["Jordan Hall", "Bret Weinstein", "Jim Rutt", "John Vervaeke"]
-print(my_opts)
 
-print(dir(pydymenu))
+# Simple
+# fzf = pydymenu.fzf(my_opts)
+# print(f"single:\n{fzf}")
 
-menu = pydymenu.Menu()
-print(menu)
+# prompt
+# fzf = pydymenu.fzf(my_opts, prompt="which? ")
+
+# multi True
+# fzf = pydymenu.fzf(my_opts, prompt="which? ", multi=True)
+
+# multi False
+# fzf = pydymenu.fzf(my_opts, prompt="which? ", multi=False)
+
+many = pydymenu.fzf(my_opts, multi=True)

@@ -2,8 +2,6 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/dotfiles
 
-__author__ = "Mikey Garcia, @gikeymarcia"
-
 from shutil import which
 import subprocess as sp
 
@@ -18,32 +16,67 @@ def has_bin(binary_name):
         return False
 
 
-class fzf:
-    def __init__(self, items, prompt=None, args=None):
-        self.prompt = Menu.resolve_prompt(prompt)
-        self.available = has_bin("fzf")
-        if self.available:
-            self.__call__()
+def fzf(list_of_items, prompt=None, multi=False):
+    _fzf_dict = {
+        # unused
+        "prompt": prompt,
+        "multi": multi,
+    }
+    return _run_fzf_with_list(list_of_items, **_fzf_dict)
 
-    def _fzf_as_grep(self, collection, query: str):
-        collection = Menu._is_iterable(collection)
-        newline_sep = "\n".join(collection)
-        printf = sp.Popen(["printf", f"{newline_sep}"], stdout=sp.PIPE)
-        dummy_fzf = sp.Popen(["fzf", "-f", query], stdin=printf.stdout, stdout=sp.PIPE)
-        head_proc = sp.Popen(["head", "-n1"], stdin=dummy_fzf.stdout, stdout=sp.PIPE)
-        return head_proc.communicate()[0].decode("utf-8")
 
-    def __call__(self, items=None, grep_query=None):
-        if type(grep_query) is str:
-            return self._fzf_as_grep(items, grep_query)
+def _run_fzf_with_list(list_of_items, **kwargs):
+    # input_items = newline_joined_bytestream(list_of_items)
+    options = process_opts(kwargs)
+    _fzf_process = sp.run(
+        ["fzf"] + options,
+        input=newline_joined_bytestream(list_of_items),
+        stdout=sp.PIPE,
+    )
+    return process_stdout(_fzf_process, multi=kwargs["multi"])
+
+
+def process_stdout(completed_process, multi=False):
+    if completed_process.returncode != 0:
+        # return None on unsuccessful runs
+        return None
+    output_list = completed_process.stdout.decode().strip().split("\n")
+    # standard_err = completed_process.stderr
+    # print(standard_out)
+    # print(output_list)
+    if multi:
+        return output_list
+    else:
+        return output_list[0]
+
+
+def newline_joined_bytestream(menu_items):
+    line_return, new_line = "\r", "\n"
+
+    def ready_to_join(list_entry):
+        if new_line in list_entry or line_return in list_entry:
+            err = f"Newlines not allowed within items. Found in\n{list_entry}"
+            raise ValueError(err)
         else:
-            items = Menu._is_iterable(items)
-            fzf_proc = sp.Popen(
-                ["fzf", f"--prompt={self.prompt}", "--ansi"],
-            )
-            print(f"output: {fzf_proc}\n" f"output: {type(fzf_proc)}")
-            print(f"items: {items}\n")
-            print(f"dir(fzf_proc): {dir(fzf_proc)}\n")
+            return str(list_entry)
+
+    strings = [ready_to_join(element) for element in menu_items]
+    return "\n".join(strings).encode("utf-8")
+
+
+def process_opts(options_dict):
+    print(f"opts: {options_dict}")
+    fzf_flags = []
+    # prompt
+    prompt = options_dict.get("prompt", None)
+    if prompt:
+        fzf_flags.extend(["--prompt", prompt])
+    # mutli-select
+    multi = options_dict.get("multi", None)
+    multi_mode = "--multi" if multi else "--no-multi"
+    fzf_flags.append(multi_mode)
+    print(f"adds: {fzf_flags}")
+    return fzf_flags
 
 
 class Menu:
