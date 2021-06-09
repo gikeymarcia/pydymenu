@@ -13,7 +13,7 @@ setup(
     description="A pythonic wrapper interface for fzf, dmenu, and rofi.",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/gikeymarcia/pydymenu",
     author="Mikey Garcia",
     author_email="",
     license="GPL-3.0-or-later",

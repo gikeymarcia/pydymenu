@@ -29,5 +29,7 @@ completely to his design decisions.
 
 **Next big thing:** Support for _other_ menu-ing systems
 
-+ `pydymenu.dmenu(['one', 'two', 'three'], prompt='Pick a number: ')`{.python}
-+ `pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')`{.python}
+```python
+dmenu = pydymenu.dmenu(['one', 'two', 'three'], prompt='Pick a number: ')
+rofi = pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')
+```
