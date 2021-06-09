@@ -33,3 +33,10 @@ completely to his design decisions.
 dmenu = pydymenu.dmenu(['one', 'two', 'three'], prompt='Pick a number: ')
 rofi = pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')
 ```
+
+### Source of Truth
+
+This project is available on [github](https://github.com/gikeymarcia/pydymenu) 
+and
+[gitlab](https://gitlab.com/gikeymarcia/pydymenu). Each push to `master` 
+automatically goes to booth so choose whichever platform you prefer.
