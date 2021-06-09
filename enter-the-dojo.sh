@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Mikey Garcia, @gikeymarcia
+# meant to be sourced before returning to development
 
 figlet "enter the dojo"
 ls -l
