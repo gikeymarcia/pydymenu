@@ -63,7 +63,7 @@ def newline_joined_bytestream(menu_items):
 
 def process_opts(options_dict):
     """Takes a dictionary of fzf options and returns the command line flags."""
-    print(f"opts: {options_dict}")
+    # print(f"opts: {options_dict}")
     fzf_flags = []
     if prompt := options_dict.get("prompt", None):
         fzf_flags.extend(["--prompt", prompt])
@@ -73,7 +73,7 @@ def process_opts(options_dict):
     fzf_flags.append(multi_mode)
     # TODO: preview
     # TODO: print_query
-    print(f"adds: {fzf_flags}")
+    # print(f"adds: {fzf_flags}")
     return fzf_flags
 
 
