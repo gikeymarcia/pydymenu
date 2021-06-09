@@ -1,2 +1,4 @@
 *.pyc
 pydymenu.egg-info/
+build/
+dist/
