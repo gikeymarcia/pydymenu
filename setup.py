@@ -15,7 +15,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/gikeymarcia/pydymenu",
     author="Mikey Garcia",
-    author_email="",
+    author_email="gikeymarcia@gmail.com",
     license="GPL-3.0-or-later",
     packages=find_packages(exclude="test"),
     install_requires=[],
