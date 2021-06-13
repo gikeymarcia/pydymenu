@@ -39,4 +39,4 @@ rofi = pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')
 This project is available on [github](https://github.com/gikeymarcia/pydymenu) 
 and
 [gitlab](https://gitlab.com/gikeymarcia/pydymenu). Each push to `master` 
-automatically goes to booth so choose whichever platform you prefer.
+automatically goes to both so choose whichever platform you prefer.
