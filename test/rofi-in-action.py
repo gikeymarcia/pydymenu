@@ -2,7 +2,7 @@
 import pydymenu
 from random import shuffle
 
-print("TESTING USAGE")
+print("TESTING ROFI")
 my_opts = [
     "Jordan Hall",
     "Bret Weinstein",
@@ -29,10 +29,10 @@ my_opts = [
 shuffle(my_opts)
 
 # Simple
-# fzf = pydymenu.fzf(my_opts)
+rofi = pydymenu.rofi(my_opts)
 
 # prompt
-fzf = pydymenu.fzf(my_opts, prompt="Who can help guide the way? ")
+# fzf = pydymenu.fzf(my_opts, prompt="Who can help guide the way? ")
 
 # multi True
 # fzf = pydymenu.fzf(my_opts, prompt="Who can help guide the way? ", multi=True)
@@ -42,4 +42,4 @@ fzf = pydymenu.fzf(my_opts, prompt="Who can help guide the way? ")
 
 # fzf = pydymenu.fzf(my_opts, multi=True)
 
-print(fzf)
+print(rofi)

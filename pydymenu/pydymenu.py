@@ -4,19 +4,18 @@
 
 from shutil import which
 import subprocess as sp
+from sys import path as sys_path
 
 
 def has_bin(binary_name):
-    if type(binary_name) is str:
-        if which(binary_name):
-            return True
-        else:
-            return False
-    else:
-        return False
+    binary = str(binary_name)
+    return True if which(binary) else False
 
 
 def fzf(list_of_items, prompt=None, multi=False):
+    if not has_bin("fzf"):
+        err_msg = f"Could not locate `fzf` on system path:\n{sys_path}"
+        raise FileNotFoundError(err_msg)
     _fzf_dict = {
         "prompt": prompt,
         "multi": multi,
@@ -25,7 +24,7 @@ def fzf(list_of_items, prompt=None, multi=False):
 
 
 def _run_fzf_with_list(list_of_items, **kwargs):
-    options = process_opts(kwargs)
+    options = process_fzf_opts(kwargs)
     _fzf_process = sp.run(
         ["fzf"] + options,
         input=newline_joined_bytestream(list_of_items),
@@ -35,6 +34,11 @@ def _run_fzf_with_list(list_of_items, **kwargs):
 
 
 def process_stdout(completed_process, multi=False):
+    """Takes a completed process object and returns selected value(s)
+
+    If multi=True returns a list, Otherwise return a string.
+    If no selection is made returns None
+    """
     if completed_process.returncode != 0:
         return None
     output_list = completed_process.stdout.decode().strip().split("\n")
@@ -48,6 +52,11 @@ def process_stdout(completed_process, multi=False):
 
 
 def newline_joined_bytestream(menu_items):
+    """Takes a list and returns a bytestream suitable for standard in
+
+    Converts all values to str before joining with newlines and encoding
+    as a utf-8 bytestream. Good for sending to input= for subprocess.run()
+    """
     line_return, new_line = "\r", "\n"
 
     def ready_to_join(list_item):
@@ -61,7 +70,7 @@ def newline_joined_bytestream(menu_items):
     return "\n".join(strings).encode("utf-8")
 
 
-def process_opts(options_dict):
+def process_fzf_opts(options_dict):
     """Takes a dictionary of fzf options and returns the command line flags."""
     # print(f"opts: {options_dict}")
     fzf_flags = []
@@ -77,41 +86,41 @@ def process_opts(options_dict):
     return fzf_flags
 
 
-class Menu:
-    def __init__(self):
-        self.menu_options = {
-            "fzf": has_bin("fzf"),
-            "rofi": has_bin("rofi"),
-            "dmenu": has_bin("dmenu"),
-        }
+def rofi(list_of_items, **kwargs):
+    if not has_bin("rofi"):
+        err_msg = f"Could not locate `rofi` on system path:\n{sys_path}"
+        raise FileNotFoundError(err_msg)
+    _rofi_dict = {
+        "case_sensitive": False,
+    }
+    options = process_rofi_opts(**kwargs)
+    _rofi_process = sp.run(
+        ["rofi", "-dmenu"] + options,
+        input=newline_joined_bytestream(list_of_items),
+    )
 
-    def present(self):
-        return self.menu_options
 
-    @staticmethod
-    def resolve_prompt(prompt):
-        if prompt is None:
-            return " > "
-        elif type(prompt) is str:
-            return prompt
-        else:
-            raise TypeError(
-                f"Incompatible prompt given:{prompt}\n"
-                f"type: {type(prompt)}\n"
-                "expected a string"
-            )
+def process_rofi_opts(**kwargs):
+    rofi_flags = []
+    if kwargs["case_sensitive"]:
+        rofi_flags.append("-case-sensitive")
+    else:
+        rofi_flags.append("-i")
+    return rofi_flags
 
-    @staticmethod
-    def _is_iterable(unknown_iterablity_obj):
-        try:
-            _ = iter(unknown_iterablity_obj)
-        except TypeError:
-            raise TypeError(
-                "Must send an iterable object.\n"
-                f"Recieved object of type: {type(unknown_iterablity_obj)}"
-            )
-        else:
-            return unknown_iterablity_obj
+
+def rofi_select(sel_list, prompt="Choose: "):
+    "Takes a list and uses rofi to return a selection."
+    pipe_delim = "|".join(sel_list)
+    opts = sp.Popen(["printf", pipe_delim], stdin=sp.PIPE, stdout=sp.PIPE)
+    rofi = sp.Popen(
+        ["rofi", "-dmenu", "-i", "-sep", "|", "-p", prompt],
+        stdin=opts.stdout,
+        stdout=sp.PIPE,
+    )
+    out, _ = rofi.communicate()
+    selection = out.decode("utf-8").strip()
+    return None if selection == "" else selection
 
 
 # vim: foldlevel=5:
