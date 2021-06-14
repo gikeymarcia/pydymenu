@@ -12,13 +12,14 @@ def has_bin(binary_name):
     return True if which(binary) else False
 
 
-def fzf(list_of_items, prompt=None, multi=False):
+def fzf(list_of_items, prompt=None, multi=False, case_sensitive=False):
     if not has_bin("fzf"):
         err_msg = f"Could not locate `fzf` on system path:\n{sys_path}"
         raise FileNotFoundError(err_msg)
     _fzf_dict = {
         "prompt": prompt,
         "multi": multi,
+        "case_sensitive": case_sensitive,
     }
     return _run_fzf_with_list(list_of_items, **_fzf_dict)
 
@@ -31,6 +32,27 @@ def _run_fzf_with_list(list_of_items, **kwargs):
         stdout=sp.PIPE,
     )
     return process_stdout(_fzf_process, multi=kwargs["multi"])
+
+
+def process_fzf_opts(options_dict):
+    """Takes a dictionary of fzf options and returns the command line flags."""
+    # print(f"opts: {options_dict}")
+    fzf_flags = []
+    if prompt := options_dict.get("prompt", None):
+        fzf_flags.extend(["--prompt", prompt])
+    # mutli-select
+    multi = options_dict.get("multi", None)
+    multi_mode = "--multi" if multi else "--no-multi"
+    fzf_flags.append(multi_mode)
+    # case sensitive (default False)
+    if options_dict["case_sensitive"]:
+        fzf_flags.append("+i")
+    else:
+        fzf_flags.append("-i")
+    # TODO: preview
+    # TODO: print_query
+    # print(f"adds: {fzf_flags}")
+    return fzf_flags
 
 
 def process_stdout(completed_process, multi=False):
@@ -70,42 +92,43 @@ def newline_joined_bytestream(menu_items):
     return "\n".join(strings).encode("utf-8")
 
 
-def process_fzf_opts(options_dict):
-    """Takes a dictionary of fzf options and returns the command line flags."""
-    # print(f"opts: {options_dict}")
-    fzf_flags = []
-    if prompt := options_dict.get("prompt", None):
-        fzf_flags.extend(["--prompt", prompt])
-    # mutli-select
-    multi = options_dict.get("multi", None)
-    multi_mode = "--multi" if multi else "--no-multi"
-    fzf_flags.append(multi_mode)
-    # TODO: preview
-    # TODO: print_query
-    # print(f"adds: {fzf_flags}")
-    return fzf_flags
-
-
-def rofi(list_of_items, **kwargs):
+def rofi(list_of_items, prompt=None, case_sensitive=False, multi=False):
     if not has_bin("rofi"):
         err_msg = f"Could not locate `rofi` on system path:\n{sys_path}"
         raise FileNotFoundError(err_msg)
     _rofi_dict = {
-        "case_sensitive": False,
+        "prompt": prompt,
+        "case_sensitive": case_sensitive,
+        "multi": multi,
     }
+    return _run_rofi_with_list(list_of_items, **_rofi_dict)
+
+
+def _run_rofi_with_list(list_of_items, **kwargs):
     options = process_rofi_opts(**kwargs)
     _rofi_process = sp.run(
         ["rofi", "-dmenu"] + options,
         input=newline_joined_bytestream(list_of_items),
+        stdout=sp.PIPE,
     )
+    return process_stdout(_rofi_process, multi=kwargs["multi"])
 
 
 def process_rofi_opts(**kwargs):
     rofi_flags = []
+    # prompt (default " > ")
+    if not (prompt := kwargs["prompt"]):
+        rofi_flags.extend(["-p", " > "])
+    else:
+        rofi_flags.extend(["-p", prompt])
+    # case sensitive (default False)
     if kwargs["case_sensitive"]:
         rofi_flags.append("-case-sensitive")
     else:
         rofi_flags.append("-i")
+    # multi-select (default False)
+    if kwargs["multi"]:
+        rofi_flags.append("-multi-select")
     return rofi_flags
 
 

@@ -1,21 +1,26 @@
 #!/usr/bin/env python
 import pydymenu
-from sample_data import options
+from .sample_data import options
 
 print("TESTING ROFI")
-
 # Simple
-rofi = pydymenu.rofi(options())
+# rofi = pydymenu.rofi(options())
 
 # prompt
-# rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ")
+rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ")
 
 # multi True
-# fzf = pydymenu.fzf(options(), prompt="Who can help guide the way? ", multi=True)
+# rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ", multi=True)
 
 # multi False
-# fzf = pydymenu.fzf(options(), prompt="Who can help guide the way? ", multi=False)
+# rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ", multi=False)
 
-# fzf = pydymenu.fzf(options(), multi=True)
+# case sensitive
+# rofi = pydymenu.rofi(
+#     options(),
+#     prompt="Who can help guide the way? ",
+#     multi=True,
+#     case_sensitive=True,
+# )
 
-print(rofi)
+print(f"Rofi output: {rofi}", f"type: {type(rofi)}", sep="\n")

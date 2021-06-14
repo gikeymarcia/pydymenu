@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 from random import shuffle
 
+__all__ = ["options"]
+
 
 def options():
-    my_opts = [
+    sensemakers = [
         "Jordan Hall",
         "Bret Weinstein",
         "Jim Rutt",
@@ -26,5 +28,8 @@ def options():
         "Ken Wilber",
         "Yoga with Adrienne",
     ]
-    shuffle(my_opts)
-    return my_opts
+    shuffle(sensemakers)
+    return sensemakers
+
+
+# vim: foldlevel=4 :

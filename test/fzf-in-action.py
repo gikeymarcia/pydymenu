@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pydymenu
-from sample_data import options
+from .sample_data import options
 
 print("TESTING FZF")
 
