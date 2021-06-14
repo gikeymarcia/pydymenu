@@ -3,7 +3,7 @@
 A single package to serve all your dynamic menu-ing needs with a simple Pythonic 
 interface.
 
-# Installation from PyPi
+# Installation from [PyPi](https://pypi.org/project/pydymenu/)
 
 ```bash
 pip install --user pydymenu
@@ -39,7 +39,7 @@ selection is made returns `None`. _(default: `multi=False`)_
 : Whether or not to use case sensitive search _(default: 
 `case_sensitive=False`)_
 
-### Project Status
+## Project Status
 
 Working support for the most common `fzf` and `rofi` use cases. Currently 
 expanding functionality for those two programs then going to move onto adding 
@@ -56,11 +56,6 @@ I'm trying to keep this package as a pretty simple drop-in replacement for
 
 - `fzf` preview
 - Support for _dmenu_ systems
-
-```python
-dmenu = pydymenu.dmenu(['one', 'two', 'three'], prompt='Pick a number: ')
-rofi = pydymenu.rofi(['one', 'two', 'three'], prompt='Pick a number: ')
-```
 
 ### Source of Truth
 
