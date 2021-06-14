@@ -1,4 +1,4 @@
-# `pydymenu`: Python wrapper for `fzf`, `rofi`, and `dmenu`
+# `pydymenu`: Pythonic wrapper for `fzf` and `rofi`
 
 A single package to serve all your dynamic menu-ing needs with a simple Pythonic 
 interface.
@@ -9,15 +9,20 @@ interface.
 pip install --user pydymenu
 ```
 
-## Usage
+## Usage `pydymenu.MENU(input_list, **options)`
 
 ```python
-from pydymenu import rofi, fzf
+import pydymenu
 
-# using rofi
-selection = rofi(['one', 'two', 'three'], prompt="Pick a number: ")
-# using fzf
-selection = fzf(['one', 'two', 'three'], prompt="Pick a number: ")
+people = ["Joe", "Sam", "Daniel", "Bret", "Jordan", "Eric", "Lex"]
+
+# simple
+rofi = pydymenu.rofi(people, prompt="Pick a podcaster: ")
+fzf = pydymenu.fzf(people, prompt="Pick a podcaster: ")
+
+# mutli
+fzf = pydymenu.fzf(people, prompt="Pick a podcaster: ", multi=True)
+rofi = pydymenu.rofi(people, prompt="Pick a podcaster: ", multi=True)
 ```
 
 ### Universal Options
