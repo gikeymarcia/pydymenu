@@ -4,8 +4,8 @@ pytest
 # dev tooling
 pynvim
 black
-bumpversion
-# https://pypi.org/project/bumpversion/
+bump2version
+# https://github.com/c4urself/bump2version
 
 # pip install current project
 --editable .
