@@ -2,3 +2,4 @@
 pydymenu.egg-info/
 build/
 dist/
+env/
