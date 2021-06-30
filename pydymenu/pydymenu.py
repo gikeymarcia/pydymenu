@@ -5,14 +5,20 @@
 from shutil import which
 import subprocess as sp
 from sys import path as sys_path
+from typing import Union
 
 
-def has_bin(binary_name):
+def has_bin(binary_name: str) -> bool:
     binary = str(binary_name)
     return True if which(binary) else False
 
 
-def fzf(list_of_items, prompt=None, multi=False, case_sensitive=False):
+def fzf(
+    list_of_items: list[str],
+    prompt: Union[str, None] = None,
+    multi: bool = False,
+    case_sensitive: bool = False,
+) -> Union[str, list[str], None]:
     if not has_bin("fzf"):
         err_msg = f"Could not locate `fzf` on system path:\n{sys_path}"
         raise FileNotFoundError(err_msg)
@@ -24,7 +30,7 @@ def fzf(list_of_items, prompt=None, multi=False, case_sensitive=False):
     return _run_fzf_with_list(list_of_items, **_fzf_dict)
 
 
-def _run_fzf_with_list(list_of_items, **kwargs):
+def _run_fzf_with_list(list_of_items: list[str], **kwargs):
     options = process_fzf_opts(kwargs)
     _fzf_process = sp.run(
         ["fzf"] + options,
@@ -34,7 +40,7 @@ def _run_fzf_with_list(list_of_items, **kwargs):
     return process_stdout(_fzf_process, multi=kwargs["multi"])
 
 
-def process_fzf_opts(options_dict):
+def process_fzf_opts(options_dict: dict) -> list[str]:
     """Takes a dictionary of fzf options and returns the command line flags."""
     # print(f"opts: {options_dict}")
     fzf_flags = []
@@ -55,7 +61,9 @@ def process_fzf_opts(options_dict):
     return fzf_flags
 
 
-def process_stdout(completed_process, multi=False):
+def process_stdout(
+    completed_process, multi: bool = False
+) -> Union[str, list[str], None]:
     """Takes a completed process object and returns selected value(s)
 
     If multi=True returns a list, Otherwise return a string.
@@ -73,7 +81,7 @@ def process_stdout(completed_process, multi=False):
         return output_list[0]
 
 
-def newline_joined_bytestream(menu_items):
+def newline_joined_bytestream(menu_items) -> bytes:
     """Takes a list and returns a bytestream suitable for standard in
 
     Converts all values to str before joining with newlines and encoding
@@ -81,7 +89,7 @@ def newline_joined_bytestream(menu_items):
     """
     line_return, new_line = "\r", "\n"
 
-    def ready_to_join(list_item):
+    def ready_to_join(list_item: str) -> str:
         if new_line in list_item or line_return in list_item:
             err = f"Newlines not allowed within items. Found in\n{list_item}"
             raise ValueError(err)
@@ -92,7 +100,12 @@ def newline_joined_bytestream(menu_items):
     return "\n".join(strings).encode("utf-8")
 
 
-def rofi(list_of_items, prompt=None, case_sensitive=False, multi=False):
+def rofi(
+    list_of_items: list[str],
+    prompt: Union[str, None] = None,
+    case_sensitive: bool = False,
+    multi: bool = False,
+):
     if not has_bin("rofi"):
         err_msg = f"Could not locate `rofi` on system path:\n{sys_path}"
         raise FileNotFoundError(err_msg)
@@ -104,7 +117,7 @@ def rofi(list_of_items, prompt=None, case_sensitive=False, multi=False):
     return _run_rofi_with_list(list_of_items, **_rofi_dict)
 
 
-def _run_rofi_with_list(list_of_items, **kwargs):
+def _run_rofi_with_list(list_of_items: list[str], **kwargs):
     options = process_rofi_opts(**kwargs)
     _rofi_process = sp.run(
         ["rofi", "-dmenu"] + options,
@@ -114,7 +127,7 @@ def _run_rofi_with_list(list_of_items, **kwargs):
     return process_stdout(_rofi_process, multi=kwargs["multi"])
 
 
-def process_rofi_opts(**kwargs):
+def process_rofi_opts(**kwargs: dict) -> list[str]:
     rofi_flags = []
     # prompt (default " > ")
     if not (prompt := kwargs["prompt"]):
@@ -132,7 +145,7 @@ def process_rofi_opts(**kwargs):
     return rofi_flags
 
 
-def rofi_select(sel_list, prompt="Choose: "):
+def rofi_select(sel_list: list[str], prompt: str = "Choose: "):
     "Takes a list and uses rofi to return a selection."
     pipe_delim = "|".join(sel_list)
     opts = sp.Popen(["printf", pipe_delim], stdin=sp.PIPE, stdout=sp.PIPE)
