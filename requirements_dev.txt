@@ -8,6 +8,9 @@ bump2version
 # https://github.com/c4urself/bump2version
 # https://williamhayes.medium.com/versioning-using-bumpversion-4d13c914e9b8
 
+# install runtime dependencies
+-r requirements.txt
+
 # pip install current project
 --editable .
 
