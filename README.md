@@ -9,7 +9,7 @@ interface.
 pip install --user pydymenu
 ```
 
-## Usage `pydymenu.MENU(input_list, **options)`
+## Usage `pydymenu.MENU(input_list, **options) -> Union[list[str], None]`
 
 ```python
 import pydymenu
