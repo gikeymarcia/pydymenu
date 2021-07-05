@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 import pydymenu
-from .sample_data import options
+from pydymenu.demo_data import options
 
 print("TESTING ROFI")
 # Simple
-# rofi = pydymenu.rofi(options())
+# rofi = pydymenu.rofi(options)
 
 # prompt
-rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ")
+rofi = pydymenu.rofi(options, prompt="Who can help guide the way? ")
 
 # multi True
-# rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ", multi=True)
+# rofi = pydymenu.rofi(options, prompt="Who can help guide the way? ", multi=True)
 
 # multi False
-# rofi = pydymenu.rofi(options(), prompt="Who can help guide the way? ", multi=False)
+# rofi = pydymenu.rofi(options, prompt="Who can help guide the way? ", multi=False)
 
 # case sensitive
 # rofi = pydymenu.rofi(
-#     options(),
+#     options,
 #     prompt="Who can help guide the way? ",
 #     multi=True,
 #     case_sensitive=True,
