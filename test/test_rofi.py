@@ -4,6 +4,7 @@
 
 import pytest
 import pydymenu
+from pydymenu.system import has_bin
 
 
 def test_make_rofi_object():
@@ -11,7 +12,7 @@ def test_make_rofi_object():
 
 
 def test_rofi_present():
-    assert pydymenu.has_bin("rofi") == True
+    assert has_bin("rofi") == True
 
 
 def test_rofi_absent(monkeypatch):

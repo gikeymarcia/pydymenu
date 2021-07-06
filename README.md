@@ -39,6 +39,13 @@ selection is made returns `None`. _(default: `multi=False`)_
 : Whether or not to use case sensitive search _(default: 
 `case_sensitive=False`)_
 
+### FZF Options
+
+`preview`
+: Command that will be run on each entry and displayed as it's preview when 
+using the fuzzy finder.
+
+
 ## Project Status
 
 Working support for the most common `fzf` and `rofi` use cases. Currently 
@@ -46,15 +53,15 @@ expanding functionality for those two programs then going to move onto adding
 `dmenu` support.
 
 I'm trying to keep this package as a pretty simple drop-in replacement for 
-`iterfzf`. Biggest design changes are:
+[`iterfzf`](https://github.com/dahlia/iterfzf). Biggest design changes are:
 
 - `fzf` automatically sorts results based on match quality.
-- `multi=True` returns a list even if only one selection is made.
+- Selections always return lists of strings. When `multi=False` returns a list 
+  of legnth 1.
 
 
 **Roadmap:**
 
-- `fzf` preview
 - Support for _dmenu_ systems
 
 ### Source of Truth

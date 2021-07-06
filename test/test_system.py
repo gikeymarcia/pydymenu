@@ -2,22 +2,22 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/dotfiles
 
-import pydymenu
+from pydymenu.system import has_bin
 import pytest
 from pathlib import Path
 
 
 def test_has_bin():
-    assert pydymenu.has_bin("fzf") == True
-    assert pydymenu.has_bin("rofi") == True
-    assert pydymenu.has_bin("") == False
-    assert pydymenu.has_bin("printf") == True
+    assert has_bin("fzf") == True
+    assert has_bin("rofi") == True
+    assert has_bin("") == False
+    assert has_bin("printf") == True
 
 
 @pytest.mark.parametrize("wrong_types", [None, {}, 127, Path.home()])
 def test_has_bin_throws_value_errors(wrong_types):
     with pytest.raises(ValueError) as except_info:
-        pydymenu.has_bin(wrong_types)
+        has_bin(wrong_types)
     assert except_info.type == ValueError
 
 
