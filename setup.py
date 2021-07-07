@@ -16,7 +16,7 @@ setup(
     url="https://github.com/gikeymarcia/pydymenu",
     author="Mikey Garcia",
     author_email="gikeymarcia@gmail.com",
-    license="GPL-3.0-or-later",
+    license="GPL-3.0",
     packages=find_packages(exclude="test"),
     install_requires=[],
 )
