@@ -14,4 +14,4 @@ python ./setup.py sdist bdist_wheel
 tar tzf dist/pydymenu-*tar.gz
 
 # to upload to PyPi
-# twine upload dist/*
+twine upload dist/*
