@@ -11,7 +11,13 @@ rm -rf ./dist/
 python ./setup.py sdist bdist_wheel
 
 # display tar contents
-tar tzf dist/pydymenu-*tar.gz
+tar tzf dist/*tar.gz
+
+# check render on PyPi
+twine check dist/*
+
+# upload to test.pypi.org
+# twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
 # to upload to PyPi
-twine upload dist/*
+# twine upload dist/*
