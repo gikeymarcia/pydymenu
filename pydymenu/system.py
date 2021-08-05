@@ -4,7 +4,7 @@
 
 from shutil import which
 from subprocess import CompletedProcess
-from typing import Union
+from typing import Union, List
 
 
 def has_bin(binary_name: str) -> bool:
@@ -14,7 +14,7 @@ def has_bin(binary_name: str) -> bool:
         raise ValueError("This function only accepts string inputs.")
 
 
-def process_stdout(proc: CompletedProcess) -> Union[list[str], None]:
+def process_stdout(proc: CompletedProcess) -> Union[List[str], None]:
     """Takes a completed process object and returns selected value(s).
 
     If no selection is made returns None
@@ -24,7 +24,7 @@ def process_stdout(proc: CompletedProcess) -> Union[list[str], None]:
     return proc.stdout.decode().strip().split("\n")
 
 
-def newline_joined_bytestream(menu_items: list[str]) -> bytes:
+def newline_joined_bytestream(menu_items: List[str]) -> bytes:
     """Takes a list and returns a bytestream suitable for standard in
 
     Converts all values to str before joining with newlines and encoding
