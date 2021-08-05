@@ -18,5 +18,5 @@ setup(
     author_email="gikeymarcia@gmail.com",
     license="GPL-3.0",
     packages=find_packages(exclude="test"),
-    install_requires=[],
+    install_requires=["rich"],
 )
