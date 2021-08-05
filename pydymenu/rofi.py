@@ -4,14 +4,14 @@
 
 import subprocess as sp
 from sys import path as sys_path
-from typing import Union
+from typing import Union, List
 
 from pydymenu.console import console
 from pydymenu.system import has_bin, newline_joined_bytestream, process_stdout
 
 
 def rofi(
-    menu_entries: list[str],
+    menu_entries: List[str],
     prompt: Union[str, None] = None,
     case_sensitive: bool = False,
     multi: bool = False,
@@ -27,7 +27,7 @@ def rofi(
     return _run_rofi_with_list(menu_entries, **_rofi_dict)
 
 
-def _run_rofi_with_list(menu_entries: list[str], **kwargs):
+def _run_rofi_with_list(menu_entries: List[str], **kwargs):
     options = process_rofi_opts(**kwargs)
     _rofi_process = sp.run(
         ["rofi", "-dmenu"] + options,
@@ -37,7 +37,7 @@ def _run_rofi_with_list(menu_entries: list[str], **kwargs):
     return process_stdout(_rofi_process)
 
 
-def process_rofi_opts(**kwargs: dict) -> list[str]:
+def process_rofi_opts(**kwargs: dict) -> List[str]:
     rofi_flags = []
     # prompt (default " > ")
     if not (prompt := kwargs["prompt"]):
@@ -55,7 +55,7 @@ def process_rofi_opts(**kwargs: dict) -> list[str]:
     return rofi_flags
 
 
-def rofi_select(sel_list: list[str], prompt: str = "Choose: "):
+def rofi_select(sel_list: List[str], prompt: str = "Choose: "):
     "Takes a list and uses rofi to return a selection."
     pipe_delim = "|".join(sel_list)
     opts = sp.Popen(["printf", pipe_delim], stdin=sp.PIPE, stdout=sp.PIPE)

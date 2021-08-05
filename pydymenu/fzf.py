@@ -4,19 +4,19 @@
 
 import subprocess as sp
 from sys import path as sys_path
-from typing import Union
+from typing import Union, List
 
 from pydymenu.console import console
 from pydymenu.system import has_bin, newline_joined_bytestream, process_stdout
 
 
 def fzf(
-    items: list[str],
+    items: List[str],
     prompt: Union[str, None] = None,
     multi: bool = False,
     case_sensitive: bool = False,
     preview: Union[str, None] = None,
-) -> Union[list[str], None]:
+) -> Union[List[str], None]:
     """Take list of strings and returns selection list or None."""
     if not has_bin("fzf"):
         err_msg = f"Could not locate `fzf` on system path:\n{sys_path}"
@@ -30,7 +30,7 @@ def fzf(
     return _run_fzf_with_list(items, **_fzf_dict)
 
 
-def _run_fzf_with_list(menu_entries: list[str], **kwargs) -> Union[None, list[str]]:
+def _run_fzf_with_list(menu_entries: List[str], **kwargs) -> Union[None, List[str]]:
     options = process_fzf_opts(kwargs)
     _fzf_process = sp.run(
         ["fzf"] + options,
@@ -41,7 +41,7 @@ def _run_fzf_with_list(menu_entries: list[str], **kwargs) -> Union[None, list[st
     return process_stdout(_fzf_process)
 
 
-def process_fzf_opts(options_dict: dict) -> list[str]:
+def process_fzf_opts(options_dict: dict) -> List[str]:
     """Takes a dictionary of fzf options and returns the command line flags."""
 
     def get(key: str):
