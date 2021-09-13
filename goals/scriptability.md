@@ -13,3 +13,13 @@ Out of current scope but will become a feature.
 ## vim ideas
 
 + `pdm` -> `pydymenu`
+
+## Further Reading
+
+- [The History of Command Palettes][command palette]
+- [FZF for JS][js]
+
+[command palette]: <https://capiche.com/e/consumer-dev-tools-command-palette>
+"The History of Command Palettes: How Typing Commands Became the Norm Again"
+[js]: <https://github.com/ajitid/fzf-for-js>
+"Do fuzzy matching using FZF algorithm in JavaScript"

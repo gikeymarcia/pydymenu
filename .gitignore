@@ -3,3 +3,5 @@ pydymenu.egg-info/
 build/
 dist/
 env/
+Session.vim
+.git/
