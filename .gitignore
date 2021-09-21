@@ -1,7 +1,7 @@
-*.pyc
-pydymenu.egg-info/
 build/
 dist/
 env/
-Session.vim
 .git/
+*.pyc
+pydymenu.egg-info/
+Session.vim
