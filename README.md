@@ -22,7 +22,7 @@ if talker:
     return talker[0]
 
 # rofi
-gui_select = rofi(people, prompt="Pick a podcaster: ", mutli=True)
+gui_select = rofi(people, prompt="Pick a podcaster: ", multi=True)
 if gui_select:
     return gui_select
 ```
