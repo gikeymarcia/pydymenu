@@ -5,6 +5,7 @@ pytest
 pynvim
 black
 bump2version
+ipdb
 # https://github.com/c4urself/bump2version#usage
 
 # install runtime dependencies

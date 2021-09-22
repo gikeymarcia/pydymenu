@@ -1,21 +1,25 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# Mikey Garcia, @gikeymarcia
+# https://github.com/gikeymarcia/pydymenu
+
 import pydymenu
-from pydymenu.demo_data import options
+from pydymenu.demo_data import gen_options, list_options
 
 print("TESTING FZF")
 
 # Simple
-fzf = pydymenu.fzf(options)
+fzf = pydymenu.fzf(list_options)
 
 # prompt
-# fzf = pydymenu.fzf(options, prompt="Who can help guide the way? ")
+# fzf = pydymenu.fzf(gen_options, prompt="Who can help guide the way? ")
 
-# multi True
-# fzf = pydymenu.fzf(options, prompt="Who can help guide the way? ", multi=True)
+# # multi True
+# fzf = pydymenu.fzf(list_options, prompt="Who can help guide the way? ", multi=True)
 
-# multi False
-# fzf = pydymenu.fzf(options, prompt="Who can help guide the way? ", multi=False)
+# # multi False
+# fzf = pydymenu.fzf(gen_options, prompt="Who can help guide the way? ", multi=False)
 
-# fzf = pydymenu.fzf(options, multi=True)
+# # preview
+# fzf = pydymenu.fzf(list_options, prompt="who? ", multi=True, preview="figlet {}")
 
-print(fzf)
+print(f"fzf output: {fzf}", f"type: {type(fzf)}", sep="\n")

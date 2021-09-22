@@ -1,66 +1,78 @@
 #!/usr/bin/env python3
 # Mikey Garcia, @gikeymarcia
-# https://github.com/gikeymarcia/dotfiles
+# https://github.com/gikeymarcia/pydymenu
 
 import subprocess as sp
-from sys import path as sys_path
-from typing import Union, List
+from typing import Iterable, List, Union
 
-from pydymenu.console import console
-from pydymenu.system import has_bin, newline_joined_bytestream, process_stdout
+from pydymenu.exceptions import MissingProgram
+from pydymenu.menu import Menu
+from pydymenu.system import missing_binary, newline_joined_bytestream
 
 
-def fzf(
-    items: List[str],
-    prompt: Union[str, None] = None,
+class FzfProtocol(Menu):
+    """Implements Menu protcol for `fzf` selector.
+
+    Takes Iterable[str] as input and returns:
+        List[str]:  upon selection
+        None:       when no selection is made
+    """
+
+    def __init__(
+        self,
+        items: Iterable[str],
+        prompt: str = None,
+        multi: bool = False,
+        case_sensitive: bool = False,
+        preview: str = None,
+    ):
+        self.items = items
+        self.prompt = " > " if prompt is None else prompt
+        self.multi = multi
+        self.case_sensitive = case_sensitive
+        self.preview = preview
+        self.flags: List[str] = self.process_opts()
+        self.command: List[str] = ["fzf"] + self.flags
+        if missing_binary("fzf"):
+            raise MissingProgram("Cannot find `fzf` on your system.")
+
+    def select(self) -> Union[List[str], None]:
+        """Run `fzf` selector on given items."""
+        process = sp.run(
+            self.command,
+            input=newline_joined_bytestream(self.items),
+            stdout=sp.PIPE,
+        )
+        output = [o for o in process.stdout.decode().split("\n") if len(o) > 0]
+        return output if len(output) > 0 else None
+
+    def process_opts(self) -> List[str]:
+        """Turn selected options into List[str] of `fzf` flags."""
+        prompt = ["--prompt", self.prompt]
+        multi = "--multi" if self.multi else "--no-multi"
+        case = "+i" if self.case_sensitive else "-i"
+        if self.preview:
+            return prompt + [multi, case, "--preview", self.preview]
+        else:
+            return prompt + [multi, case]
+
+
+def fzf_func(
+    items: Iterable[str],
+    prompt: str = None,
     multi: bool = False,
     case_sensitive: bool = False,
-    preview: Union[str, None] = None,
-) -> Union[List[str], None]:
-    """Take list of strings and returns selection list or None."""
-    if not has_bin("fzf"):
-        err_msg = f"Could not locate `fzf` on system path:\n{sys_path}"
-        raise FileNotFoundError(err_msg)
-    _fzf_dict = {
-        "prompt": prompt,
-        "multi": multi,
-        "case_sensitive": case_sensitive,
-        "preview": preview,
-    }
-    return _run_fzf_with_list(items, **_fzf_dict)
-
-
-def _run_fzf_with_list(menu_entries: List[str], **kwargs) -> Union[None, List[str]]:
-    options = process_fzf_opts(kwargs)
-    _fzf_process = sp.run(
-        ["fzf"] + options,
-        input=newline_joined_bytestream(menu_entries),
-        stdout=sp.PIPE,
+    preview: str = None,
+):
+    """Launches a `fzf` process and returns either List[str] or None."""
+    fuzzy_fider = FzfProtocol(
+        items=items,
+        prompt=prompt,
+        multi=multi,
+        case_sensitive=case_sensitive,
+        preview=preview,
     )
-    # console.log(f"{_fzf_process = }")
-    return process_stdout(_fzf_process)
+    return fuzzy_fider.select()
 
 
-def process_fzf_opts(options_dict: dict) -> List[str]:
-    """Takes a dictionary of fzf options and returns the command line flags."""
-
-    def get(key: str):
-        """Return a dict value from options_dict or None if missing."""
-        return options_dict.get(key, None)
-
-    flags = []
-    if prompt := get("prompt"):
-        flags.extend(["--prompt", prompt])
-    # mutli-select
-    multi = "--multi" if get("multi") else "--no-multi"
-    flags.append(multi)
-    if get("case_sensitive"):
-        flags.append("+i")
-    else:
-        flags.append("-i")
-    if prev := get("preview"):
-        flags.extend(["--preview", prev])
-    return flags
-
-
-# vim: foldlevel=5:
+# vim: foldlevel=1:

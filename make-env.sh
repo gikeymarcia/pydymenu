@@ -3,7 +3,7 @@
 
 env=./env
 if [ -d $env ]; then
-    rm -rf $env
+    rm -rfv $env
 fi
 python -m pip install --user virtualenv
 python -m virtualenv $env

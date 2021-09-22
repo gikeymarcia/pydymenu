@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 from random import shuffle
 import time
+from typing import Iterable
 
-__all__ = ["options", "gen_opts"]
+__all__ = ["list_options", "gen_options"]
 
 sensemakers = [
     "Jordan Hall",
@@ -28,14 +29,16 @@ sensemakers = [
     "Yoga with Adrienne",
 ]
 
-shuffle(sensemakers)
-options = sensemakers
 
-
-def gen_opts(source: list):
+def list_to_generator(source: Iterable[str]) -> Iterable[str]:
     for i in source:
-        time.sleep(0.15)
+        time.sleep(0.01)
         yield i
+
+
+shuffle(sensemakers)
+list_options = sensemakers
+gen_options = list_to_generator(sensemakers)
 
 
 # vim: foldlevel=4 :

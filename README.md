@@ -1,50 +1,48 @@
-# `pydymenu`: Pythonic wrapper for `fzf` and `rofi`
+# pydymenu: A Pythonic interface for `fzf` and `rofi`
 
 A single package to serve all your dynamic menu-ing needs with a simple Pythonic 
 interface.
 
-# Installation from [PyPi](https://pypi.org/project/pydymenu/)
+## Installation from [PyPi](https://pypi.org/project/pydymenu/)
 
 ```bash
 pip install --user pydymenu
 ```
 
-## Usage `pydymenu.MENU(input_list, **options) -> Union[List[str], None]`
+## Usage 
 
 ```python
-import pydymenu
+from pydymenu import fzf, rofi
 
 people = ["Joe", "Sam", "Daniel", "Bret", "Jordan", "Eric", "Lex"]
 
-# simple
-rofi = pydymenu.rofi(people, prompt="Pick a podcaster: ")
-fzf = pydymenu.fzf(people, prompt="Pick a podcaster: ")
+# fzf
+talker = fzf(people, prompt="Pick a podcaster: ", preview="figlet {}")
+if talker:
+    return talker[0]
 
-# mutli
-fzf = pydymenu.fzf(people, prompt="Pick a podcaster: ", multi=True)
-rofi = pydymenu.rofi(people, prompt="Pick a podcaster: ", multi=True)
+# rofi
+gui_select = rofi(people, prompt="Pick a podcaster: ", mutli=True)
+if gui_select:
+    return gui_select
 ```
 
-### Universal Options
+`pydymenu.MENU(item: Iterable[str], **options) -> Union[List[str], None]`
 
-`prompt`
+### Options
+
+`prompt: str`
 : The prompt text shown at the selection _(default: ` > `)_
 
-`multi`
-: Whether or not to allow multiple selections. When `multi=True` returns a list 
-of selected values. If one selection is made returns a list of length one. If no 
-selection is made returns `None`. _(default: `multi=False`)_
+`multi: bool`
+: Whether or not to allow multiple selections. _(default: `multi=False`)_
 
-`case_sensitive`
-: Whether or not to use case sensitive search _(default: 
-`case_sensitive=False`)_
+`case_sensitive: bool`
+: Whether or not to use case sensitive search _(default: `case_sensitive=False`)_
 
-### FZF Options
-
-`preview`
+`preview: str` **(fzf only)**
 : Command that will be run on each entry and displayed as it's preview when 
 using the fuzzy finder.
-
 
 ## Project Status
 
@@ -57,8 +55,7 @@ I'm trying to keep this package as a pretty simple drop-in replacement for
 
 - `fzf` automatically sorts results based on match quality.
 - Selections always return lists of strings. When `multi=False` returns a list 
-  of legnth 1.
-
+  of length 1.
 
 **Roadmap:**
 
@@ -66,7 +63,9 @@ I'm trying to keep this package as a pretty simple drop-in replacement for
 
 ### Source of Truth
 
-This project is available on [github](https://github.com/gikeymarcia/pydymenu) 
-and
+This project is available on [github](https://github.com/gikeymarcia/pydymenu) and
 [gitlab](https://gitlab.com/gikeymarcia/pydymenu). Each push to `master` 
-automatically goes to both so choose whichever platform you prefer.
+automatically goes to both so choose whichever platform you prefer. All releases 
+are uploaded to [PyPi](https://pypi.org/project/pydymenu/) 
+
+Big thanks to [fzf](https://github.com/junegunn/fzf) and [Rofi](https://github.com/davatorium/rofi) developers for making the utilities this tool relies upon.

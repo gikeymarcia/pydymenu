@@ -4,6 +4,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0] - 2021-09-21
+
+- Major code refactor and cleanup
+- Improved README
+- Front-end interface should be the same but the code is much more straightforward and adding new features will be much more painless.
+- Expanded `RofiProtocol` testing suite
+
 ## [0.2.0] - 2021-07-05
 
 ### Added

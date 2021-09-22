@@ -1,34 +1,24 @@
 #!/usr/bin/env python3
 # Mikey Garcia, @gikeymarcia
-# https://github.com/gikeymarcia/
+# https://github.com/gikeymarcia/pydymenu
 
 from shutil import which
-from subprocess import CompletedProcess
-from typing import Union, List
+from typing import Iterable, List
 
 
-def has_bin(binary_name: str) -> bool:
-    if type(binary_name) is str:
-        return True if which(binary_name) else False
+def missing_binary(binary_name: str) -> bool:
+    """Tests whether a binary is missing from the system"""
+    if isinstance(binary_name, str):
+        return False if which(binary_name) else True
     else:
         raise ValueError("This function only accepts string inputs.")
 
 
-def process_stdout(proc: CompletedProcess) -> Union[List[str], None]:
-    """Takes a completed process object and returns selected value(s).
+def newline_joined_bytestream(menu_items: Iterable[str]) -> bytes:
+    """Takes an Iterable[str] and returns a bytestream suitable for standard in
 
-    If no selection is made returns None
-    """
-    if proc.returncode != 0:
-        return None
-    return proc.stdout.decode().strip().split("\n")
-
-
-def newline_joined_bytestream(menu_items: List[str]) -> bytes:
-    """Takes a list and returns a bytestream suitable for standard in
-
-    Converts all values to str before joining with newlines and encoding
-    as a utf-8 bytestream. Good for sending to input= for subprocess.run()
+    Joins all strings with '\n' then encodes as a utf-8 bytestream.
+    Good for subprocess.run(input=) use
     """
     line_return, new_line = "\r", "\n"
 
@@ -39,5 +29,21 @@ def newline_joined_bytestream(menu_items: List[str]) -> bytes:
         else:
             return list_item
 
-    strings = [ready_to_join(i) for i in menu_items]
-    return "\n".join(strings).encode("utf-8")
+    return "\n".join([ready_to_join(i) for i in menu_items]).encode("utf-8")
+
+
+def command_input(_: List[str]) -> List[str]:
+    """Run a shell command and get a result suitable for pydymenu input.
+
+    For example:
+    pydymenu.fzf(
+        command_input(["find", Path.home(), "-name", "*.mp3"]),
+        prompt="Which mp3(s) do you want?",
+        multi=True
+    )
+    """
+    # TODO make this
+    raise NotImplementedError
+
+
+__all__ = ["newline_joined_bytestream", "missing_binary"]

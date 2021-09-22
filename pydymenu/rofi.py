@@ -1,72 +1,71 @@
 #!/usr/bin/env python3
 # Mikey Garcia, @gikeymarcia
-# https://github.com/gikeymarcia/dotfiles
+# https://github.com/gikeymarcia/pydymenu
 
 import subprocess as sp
-from sys import path as sys_path
-from typing import Union, List
+from typing import Iterable, List, Union
 
-from pydymenu.console import console
-from pydymenu.system import has_bin, newline_joined_bytestream, process_stdout
+from pydymenu.exceptions import MissingProgram
+from pydymenu.menu import Menu
+from pydymenu.system import missing_binary, newline_joined_bytestream
 
 
-def rofi(
-    menu_entries: List[str],
-    prompt: Union[str, None] = None,
-    case_sensitive: bool = False,
+class RofiProtocol(Menu):
+    """Implements Menu protcol for `rofi` selector.
+
+    Takes Iterable[str] as input and returns:
+        List[str]:  upon selection
+        None:       when no selection is made
+    """
+
+    def __init__(
+        self,
+        items: Iterable[str],
+        prompt: str = None,
+        multi: bool = False,
+        case_sensitive: bool = False,
+    ):
+        self.items = items
+        self.prompt = " > " if prompt is None else prompt
+        self.multi = multi
+        self.case_sensitive = case_sensitive
+        self.flags: List[str] = self.process_opts()
+        self.command: List[str] = "rofi -dmenu".split() + self.flags
+        if missing_binary("rofi"):
+            raise MissingProgram("Cannot find `rofi` on your system.")
+
+    def select(self) -> Union[List[str], None]:
+        """Run `rofi` selector on given items."""
+        process = sp.run(
+            self.command,
+            input=newline_joined_bytestream(self.items),
+            stdout=sp.PIPE,
+        )
+        output = [o for o in process.stdout.decode().split("\n") if len(o) > 0]
+        return output if len(output) > 0 else None
+
+    def process_opts(self) -> List[str]:
+        """Turn selected options into List[str] of `rofi` flags."""
+        prompt = ["-p", self.prompt]
+        multi = ["-multi-select"] if self.multi else []
+        case = ["-case-sensitive"] if self.case_sensitive else ["-i"]
+        return prompt + multi + case
+
+
+def rofi_func(
+    items: Iterable[str],
+    prompt: str = None,
     multi: bool = False,
+    case_sensitive: bool = False,
 ):
-    if not has_bin("rofi"):
-        err_msg = f"Could not locate `rofi` on system path:\n{sys_path}"
-        raise FileNotFoundError(err_msg)
-    _rofi_dict = {
-        "prompt": prompt,
-        "case_sensitive": case_sensitive,
-        "multi": multi,
-    }
-    return _run_rofi_with_list(menu_entries, **_rofi_dict)
-
-
-def _run_rofi_with_list(menu_entries: List[str], **kwargs):
-    options = process_rofi_opts(**kwargs)
-    _rofi_process = sp.run(
-        ["rofi", "-dmenu"] + options,
-        input=newline_joined_bytestream(menu_entries),
-        stdout=sp.PIPE,
+    """Launches a `rofi` process and returns either List[str] or None."""
+    rofi_selector = RofiProtocol(
+        items=items,
+        prompt=prompt,
+        multi=multi,
+        case_sensitive=case_sensitive,
     )
-    return process_stdout(_rofi_process)
+    return rofi_selector.select()
 
 
-def process_rofi_opts(**kwargs: dict) -> List[str]:
-    rofi_flags = []
-    # prompt (default " > ")
-    if not (prompt := kwargs["prompt"]):
-        rofi_flags.extend(["-p", " > "])
-    else:
-        rofi_flags.extend(["-p", prompt])
-    # case sensitive (default False)
-    if kwargs["case_sensitive"]:
-        rofi_flags.append("-case-sensitive")
-    else:
-        rofi_flags.append("-i")
-    # multi-select (default False)
-    if kwargs["multi"]:
-        rofi_flags.append("-multi-select")
-    return rofi_flags
-
-
-def rofi_select(sel_list: List[str], prompt: str = "Choose: "):
-    "Takes a list and uses rofi to return a selection."
-    pipe_delim = "|".join(sel_list)
-    opts = sp.Popen(["printf", pipe_delim], stdin=sp.PIPE, stdout=sp.PIPE)
-    rofi = sp.Popen(
-        ["rofi", "-dmenu", "-i", "-sep", "|", "-p", prompt],
-        stdin=opts.stdout,
-        stdout=sp.PIPE,
-    )
-    out, _ = rofi.communicate()
-    selection = out.decode("utf-8").strip()
-    return None if selection == "" else selection
-
-
-# vim: foldlevel=5:
+# vim: foldlevel=1:
