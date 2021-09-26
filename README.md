@@ -63,8 +63,8 @@ I'm trying to keep this package as a pretty simple drop-in replacement for
 
 ### Source of Truth
 
-This project is available on [github](https://github.com/gikeymarcia/pydymenu) and
-[gitlab](https://gitlab.com/gikeymarcia/pydymenu). Each push to `master` 
+This project is available on [GitHub](https://github.com/gikeymarcia/pydymenu) and
+[GitLab](https://gitlab.com/gikeymarcia/pydymenu). Each push to `master` 
 automatically goes to both so choose whichever platform you prefer. All releases 
 are uploaded to [PyPi](https://pypi.org/project/pydymenu/) 
 
