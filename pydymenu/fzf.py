@@ -65,14 +65,14 @@ def fzf_func(
     preview: str = None,
 ):
     """Launches a `fzf` process and returns either List[str] or None."""
-    fuzzy_fider = FzfProtocol(
+    fuzzy_finder = FzfProtocol(
         items=items,
         prompt=prompt,
         multi=multi,
         case_sensitive=case_sensitive,
         preview=preview,
     )
-    return fuzzy_fider.select()
+    return fuzzy_finder.select()
 
 
 # vim: foldlevel=1:
