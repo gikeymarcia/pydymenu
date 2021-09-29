@@ -7,7 +7,7 @@ from typing import Iterable, List, Union
 
 from pydymenu.exceptions import MissingProgram
 from pydymenu.menu import Menu
-from pydymenu.system import missing_binary, newline_joined_bytestream
+from pydymenu.system import missing_binary, stream_to_stdin
 
 
 class RofiProtocol(Menu):
@@ -30,19 +30,22 @@ class RofiProtocol(Menu):
         self.multi = multi
         self.case_sensitive = case_sensitive
         self.flags: List[str] = self.process_opts()
-        self.command: List[str] = "rofi -dmenu".split() + self.flags
+        self.command: List[str] = [
+            "rofi",
+            "-dmenu",
+            "-async-pre-read",
+            "1",
+        ] + self.flags
         if missing_binary("rofi"):
             raise MissingProgram("Cannot find `rofi` on your system.")
 
     def select(self) -> Union[List[str], None]:
         """Run `rofi` selector on given items."""
-        process = sp.run(
-            self.command,
-            input=newline_joined_bytestream(self.items),
-            stdout=sp.PIPE,
-        )
-        output = [o for o in process.stdout.decode().split("\n") if len(o) > 0]
-        return output if len(output) > 0 else None
+        output: Union[str, None] = stream_to_stdin(self.items, self.command)
+        if output is None:
+            return None
+        else:
+            return [line for line in output.split("\n") if len(line) > 0]
 
     def process_opts(self) -> List[str]:
         """Turn selected options into List[str] of `rofi` flags."""

@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+# Mikey Garcia, @gikeymarcia
+# https://github.com/gikeymarcia/pydymenu
+
+__author__ = "Mikey Garcia, @gikeymarcia"
 from pydymenu.fzf import FzfProtocol
 from pydymenu.fzf import fzf_func as fzf
 from pydymenu.rofi import RofiProtocol

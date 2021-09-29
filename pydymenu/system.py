@@ -2,8 +2,10 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/pydymenu
 
+import errno
 from shutil import which
-from typing import Iterable, List
+import subprocess as sp
+from typing import Iterable, List, Union
 
 
 def missing_binary(binary_name: str) -> bool:
@@ -12,6 +14,50 @@ def missing_binary(binary_name: str) -> bool:
         return False if which(binary_name) else True
     else:
         raise ValueError("This function only accepts string inputs.")
+
+
+def stream_to_stdin(items: Iterable[str], command: List[str]) -> Union[str, None]:
+    """
+    Stream each Iteralbe item into the standard in for the given command.
+
+    Each item is appended with a '\n' and utf-8' encoded before streamed in.
+
+    Uses low-level subprocess.Popen(). If the process is interrupted or
+    completes with an error code the None value will be returned. Otherwise,
+    the byte output of Popen.stdout is decoded into a string and returned.
+
+    """
+    proc = sp.Popen(command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+    stdin, stdout = proc.stdin, proc.stdout
+    line_return, new_line = "\r", "\n"
+    if proc is not None and stdin is not None and stdout is not None:
+        for i in items:
+            if new_line in i or line_return in i:
+                raise ValueError("no line breaks within an item.")
+            else:
+                try:
+                    stdin.write(i.encode("utf-8") + b"\n")
+                    stdin.flush()
+                except IOError as e:
+                    if e.errno != errno.EPIPE and errno.EPIPE != 32:
+                        raise
+            poll = proc.poll()
+            if poll in [1, 2, 130]:
+                # fzf returns 130 when interrupted with Ctrl+c
+                return None
+            elif poll == 0:
+                return stdout.read().decode()
+        try:
+            stdin.close()
+        except IOError as e:
+            if e.errno != errno.EPIPE and errno.EPIPE != 32:
+                raise
+        if proc is None or proc.wait() not in [0, 1]:
+            return None
+        elif stdout is not None:
+            return stdout.read().decode()
+        else:
+            return None
 
 
 def newline_joined_bytestream(menu_items: Iterable[str]) -> bytes:
@@ -46,4 +92,4 @@ def command_input(_: List[str]) -> List[str]:
     raise NotImplementedError
 
 
-__all__ = ["newline_joined_bytestream", "missing_binary"]
+__all__ = ["newline_joined_bytestream", "missing_binary", "stream_to_stdin"]

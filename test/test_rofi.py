@@ -1,6 +1,6 @@
-# !/usr/bin/env python3
-#  Mikey Garcia, @gikeymarcia
-#  https://github.com/gikeymarcia/pydymenu
+#!/usr/bin/env python3
+# Mikey Garcia, @gikeymarcia
+# https://github.com/gikeymarcia/pydymenu
 
 import pytest
 

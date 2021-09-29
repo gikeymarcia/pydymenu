@@ -15,7 +15,7 @@ print("TESTING ROFI")
 
 # multi True
 rofi = pydymenu.rofi(
-    list_options,
+    gen_options,
     prompt="Who can help guide the way? ",
     multi=True,
 )

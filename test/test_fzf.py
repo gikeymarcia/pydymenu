@@ -5,7 +5,7 @@
 import pytest
 
 import pydymenu
-from pydymenu.demo_data import gen_options, list_options
+from pydymenu.demo_data import gen_options
 from pydymenu.exceptions import MissingProgram
 
 

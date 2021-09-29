@@ -1,8 +1,12 @@
+#!/usr/bin/env python3
+# Mikey Garcia, @gikeymarcia
+# https://github.com/gikeymarcia/pydymenu
+
 import argparse
 
 import pydymenu
 from pydymenu.console import console
-from pydymenu.demo_data import list_options
+from pydymenu.demo_data import gen_options
 
 parser = argparse.ArgumentParser(
     prog="python -m pydymenu",
@@ -18,7 +22,7 @@ select = False
 if args.fzf:
     console.log("fzf mode", style="title")
     select = pydymenu.fzf(
-        list_options,
+        gen_options,
         prompt="Choose with fzf: ",
         multi=True,
         preview="echo {} | sed -E 's/[aeiou]//g' | figlet",
@@ -26,7 +30,7 @@ if args.fzf:
 elif args.rofi:
     console.log("rofi mode", style="title")
     select = pydymenu.rofi(
-        list_options,
+        gen_options,
         prompt="Choose with rofi: ",
         multi=True,
     )

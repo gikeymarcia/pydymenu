@@ -2,12 +2,11 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/pydymenu
 
-import subprocess as sp
 from typing import Iterable, List, Union
 
 from pydymenu.exceptions import MissingProgram
 from pydymenu.menu import Menu
-from pydymenu.system import missing_binary, newline_joined_bytestream
+from pydymenu.system import missing_binary, stream_to_stdin
 
 
 class FzfProtocol(Menu):
@@ -36,16 +35,6 @@ class FzfProtocol(Menu):
         if missing_binary("fzf"):
             raise MissingProgram("Cannot find `fzf` on your system.")
 
-    def select(self) -> Union[List[str], None]:
-        """Run `fzf` selector on given items."""
-        process = sp.run(
-            self.command,
-            input=newline_joined_bytestream(self.items),
-            stdout=sp.PIPE,
-        )
-        output = [o for o in process.stdout.decode().split("\n") if len(o) > 0]
-        return output if len(output) > 0 else None
-
     def process_opts(self) -> List[str]:
         """Turn selected options into List[str] of `fzf` flags."""
         prompt = ["--prompt", self.prompt]
@@ -56,6 +45,14 @@ class FzfProtocol(Menu):
         else:
             return prompt + [multi, case]
 
+    def select(self) -> Union[List[str], None]:
+        """Run `fzf` selector on given items."""
+        output: Union[str, None] = stream_to_stdin(self.items, self.command)
+        if output is None:
+            return None
+        else:
+            return [line for line in output.split("\n") if len(line) > 0]
+
 
 def fzf_func(
     items: Iterable[str],
@@ -63,7 +60,7 @@ def fzf_func(
     multi: bool = False,
     case_sensitive: bool = False,
     preview: str = None,
-):
+) -> Union[List[str], None]:
     """Launches a `fzf` process and returns either List[str] or None."""
     fuzzy_finder = FzfProtocol(
         items=items,

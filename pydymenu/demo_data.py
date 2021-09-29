@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Mikey Garcia, @gikeymarcia
+# https://github.com/gikeymarcia/pydymenu
+
 from random import shuffle
 import time
 from typing import Iterable
@@ -27,12 +30,26 @@ sensemakers = [
     "David Fuller",
     "Ken Wilber",
     "Yoga with Adrienne",
+    "Jimmy Dore",
+    "Dave Snowden",
+    "Tristan Harris",
+    "Paul Stamets",
+    "Daniel Schmachtenberger",
+    "Peter Wang",
+    "John Robb",
+    "Samo Burja",
+    "Tyson Yunkaporta",
+    "Michael Malice",
+    "Joscha Bach",
+    "Michel Bauwens",
+    "Yancey Strickler",
+    "Hanzi Freinacht",
 ]
 
 
 def list_to_generator(source: Iterable[str]) -> Iterable[str]:
     for i in source:
-        time.sleep(0.01)
+        time.sleep(0.1)
         yield i
 
 
