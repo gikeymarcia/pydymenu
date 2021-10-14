@@ -27,7 +27,7 @@ if gui_select:
     return gui_select
 ```
 
-`pydymenu.MENU(item: Iterable[str], **options) -> Union[List[str], None]`
+`pydymenu.MENU(item: Iterable[str], **options) -> Optional[List[str]]`
 
 ### Options
 

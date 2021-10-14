@@ -2,7 +2,7 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/pydymenu
 
-from typing import Iterable, List, Union
+from typing import Iterable, List, Optional
 
 from pydymenu.exceptions import MissingProgram
 from pydymenu.menu import Menu
@@ -45,9 +45,9 @@ class FzfProtocol(Menu):
         else:
             return prompt + [multi, case]
 
-    def select(self) -> Union[List[str], None]:
+    def select(self) -> Optional[List[str]]:
         """Run `fzf` selector on given items."""
-        output: Union[str, None] = stream_to_stdin(self.items, self.command)
+        output: Optional[str] = stream_to_stdin(self.items, self.command)
         if output is None:
             return None
         else:
@@ -60,7 +60,7 @@ def fzf_func(
     multi: bool = False,
     case_sensitive: bool = False,
     preview: str = None,
-) -> Union[List[str], None]:
+) -> Optional[List[str]]:
     """Launches a `fzf` process and returns either List[str] or None."""
     fuzzy_finder = FzfProtocol(
         items=items,

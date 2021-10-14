@@ -2,8 +2,7 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/pydymenu
 
-import subprocess as sp
-from typing import Iterable, List, Union
+from typing import Iterable, List, Optional
 
 from pydymenu.exceptions import MissingProgram
 from pydymenu.menu import Menu
@@ -39,9 +38,9 @@ class RofiProtocol(Menu):
         if missing_binary("rofi"):
             raise MissingProgram("Cannot find `rofi` on your system.")
 
-    def select(self) -> Union[List[str], None]:
+    def select(self) -> Optional[List[str]]:
         """Run `rofi` selector on given items."""
-        output: Union[str, None] = stream_to_stdin(self.items, self.command)
+        output: Optional[str] = stream_to_stdin(self.items, self.command)
         if output is None:
             return None
         else:

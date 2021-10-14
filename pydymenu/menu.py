@@ -2,7 +2,7 @@
 # Mikey Garcia, @gikeymarcia
 # https://github.com/gikeymarcia/pydymenu
 
-from typing import Protocol, List, Union, Iterable
+from typing import Protocol, List, Iterable, Optional
 
 
 class Menu(Protocol):
@@ -16,5 +16,5 @@ class Menu(Protocol):
     ):
         raise NotImplementedError
 
-    def select(self) -> Union[List[str], None]:
+    def select(self) -> Optional[List[str]]:
         raise NotImplementedError

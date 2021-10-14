@@ -5,7 +5,7 @@
 import errno
 from shutil import which
 import subprocess as sp
-from typing import Iterable, List, Union
+from typing import Iterable, List, Optional
 
 
 def missing_binary(binary_name: str) -> bool:
@@ -16,7 +16,7 @@ def missing_binary(binary_name: str) -> bool:
         raise ValueError("This function only accepts string inputs.")
 
 
-def stream_to_stdin(items: Iterable[str], command: List[str]) -> Union[str, None]:
+def stream_to_stdin(items: Iterable[str], command: List[str]) -> Optional[str]:
     """
     Stream each Iteralbe item into the standard in for the given command.
 
