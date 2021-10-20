@@ -3,10 +3,18 @@
 A single package to serve all your dynamic menu-ing needs with a simple Pythonic 
 interface.
 
-## Installation from [PyPi](https://pypi.org/project/pydymenu/)
+## Installation
+
+### Dependencies
 
 ```bash
-pip install --user pydymenu
+sudo apt install fzf rofi -y
+```
+
+### From [PyPi](https://pypi.org/project/pydymenu/)
+
+```bash
+pip3 install --user pydymenu
 ```
 
 ## Usage 
@@ -24,10 +32,10 @@ if talker:
 # rofi
 gui_select = rofi(people, prompt="Pick a podcaster: ", multi=True)
 if gui_select:
-    return gui_select
+    return gui_select[0]
 ```
 
-`pydymenu.MENU(item: Iterable[str], **options) -> Optional[List[str]]`
+`pydymenu.MENU(items: Iterable[str], **options) -> Optional[List[str]]`
 
 ### Options
 

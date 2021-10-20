@@ -9,4 +9,4 @@ my_theme = Theme(
     }
 )
 
-console = Console(theme=my_theme)
+console = Console(theme=my_theme, color_system="auto")

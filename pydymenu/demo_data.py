@@ -49,7 +49,7 @@ sensemakers = [
 
 def list_to_generator(source: Iterable[str]) -> Iterable[str]:
     for i in source:
-        time.sleep(0.1)
+        time.sleep(0.05)
         yield i
 
 
