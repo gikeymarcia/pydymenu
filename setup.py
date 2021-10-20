@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 # https://setuptools.readthedocs.io/en/latest/setuptools.html#basic-use
 setup(
     name="pydymenu",
-    version="0.5.0",
+    version="0.5.1",
     description="A pythonic wrapper interface for fzf, dmenu, and rofi.",
     long_description=README,
     long_description_content_type="text/markdown",
