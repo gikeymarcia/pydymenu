@@ -1,9 +1,9 @@
-from pydymenu import fzf
+import pydymenu
 
 # import sample data
 from pydymenu.demo_data import gen_options as items
 
-fzf_selection = fzf(
+fzf_selection = pydymenu.fzf(
     items,
     prompt="Choose with fzf: ",
     multi=True,
