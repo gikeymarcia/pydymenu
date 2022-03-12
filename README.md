@@ -1,6 +1,6 @@
 # pydymenu: A Pythonic interface for `fzf` and `rofi`
 
-A single package to serve all your dynamic menu-ing needs with a simple Pythonic 
+A single package to serve all your dynamic menu-ing needs with a simple Pythonic
 interface.
 
 ## Installation
@@ -21,8 +21,8 @@ pip3 install -U pydymenu
 
 ## Demonstration
 
-To see each finder in action and get a sample code snippet to get you started 
-try the module command-line interface.
+To see each finder in action and get a sample code snippet to get you started
+try the command-line interface.
 
 ```bash
 python3 -m pydymenu --fzf
@@ -31,14 +31,41 @@ python3 -m pydymenu --rofi
 
 ## Basic Usage
 
-- Import the finder you want
-    - `from pydymenu import fzf`
-    - `from pydymenu import rofi`
-- Takes an iterable object and streams each item into the selected finder tool 
-  as soon as it is available.
+To begin, use `fzf` to pick an item from a list.
+
+```python
+import pydymenu
+
+with_a_list = ["apples", "grapes", "bananas", "pears", "strawberries"]
+choice = pydymenu.fzf(with_a_list, prompt="Which fruit? ")
+print(f"Enjoy your {choice[0]}")
+# if you wanted to use rofi instead
+choice = pydymenu.rofi(with_a_list, prompt="Which fruit? ")
+```
+
+My favorite way to use this tool is with a dictionary of values. Python makes it
+easy to select from a list of human-readable names but retrieve programming
+related values like int, float, or even your own custom objects.
+
+```python
+with_dict = {
+    "big number": 1_000_000_000,
+    "home": Path().home(),
+    "author": "Mikey Garcia",
+}
+choice = pydymenu.fzf(
+    [name for name, _ in with_dict.items()],
+    prompt="Which option? ",
+)
+if choice:
+    value = with_dict[choice[0]]
+    print(f"{choice[0]}: {value}")
+else:
+    print("No selection made.")
+
+```
 
 ### `pydymenu.MENU(items: Iterable[str], **options) -> Optional[List[str]]`
-
 
 ### Parameters
 
@@ -56,63 +83,44 @@ python3 -m pydymenu --rofi
 : Whether or not to use case sensitive search _(default: `case_sensitive=False`)_
 
 `preview: str` **(fzf only)**
-: Command that will be run on each entry and displayed as it's preview when 
+: Command that will be run on each entry and displayed as it's preview when
 using the fuzzy finder. [Read more in the fzf documentation][prev docs]
 
 ### Return Value
 
-As soon as a selection is made the finder closes and returns the result as a 
-`list[str]`. If no selection is made and/or the selection is cancelled `None` is 
+As soon as a selection is made the finder closes and returns the result as a
+`list[str]`. If no selection is made and/or the selection is cancelled `None` is
 returned. This return signature allows for the following nice pythonic use case.
 
 ```python
-from pydymenu import fzf
+import pydymenu
 
-selection = fzf(items)
+selection = pydymenu.fzf(items)
 if selection:
-    print(selection)
+    print(selection[0])
 else:
     print('No selection made.')
 ```
 
-## Project Status
+## Development
 
-I'm trying to keep this package as a pretty simple drop-in replacement for 
-[`iterfzf`][iterfzf]. Biggest design changes are:
+To get started with development:
 
-- `fzf` automatically sorts results based on match quality.
-- Selections always return lists of strings. When `multi=False` returns a list 
-  of length 1.
+- clone the repository
+- install development dependencies
+- `source ./tools.sh`
 
-**Roadmap:**
-
-- Incorporate built in smart fzf preview script
-    - Plan is to make it so `python3 -m pydymenu.fzf_preview {}` would generate 
-      previews for a bunch of common file types (and even folders)
-        - `.cow`
-        - `.deb`
-        - `.flf`
-        - `.iso`
-        - `.json`
-        - `.mkv`
-        - `.mp3`
-        - `.mp4`
-        - `.pdf`
-        - `.py`
-        - `.ttf`
-        - `.webm`
-        - directories
-
-- ~~Support for _dmenu_~~ this is on the back burner because I'm not using 
-  `dmenu` much these days
+See my [Super Python Project Template][template] on GitHub to learn more about
+the automated features of this development environment. Clone the repo to get
+your own Python projects up and running quickly!
 
 ### Source of Truth
 
-This project is available on [GitHub][github] and [GitLab][gitlab]. Each push to 
-`master` automatically goes to both so choose whichever platform you prefer. All 
+This project is available on [GitHub][github] and [GitLab][gitlab]. Each push to
+`master` automatically goes to both so choose whichever platform you prefer. All
 releases are uploaded to [PyPi][pypi].
 
-Big thanks to [fzf][fzf] and [Rofi][rofi] developers for making the utilities 
+Big thanks to [fzf][fzf] and [Rofi][rofi] developers for making the utilities
 this tool relies upon.
 
 [prev docs]: <https://github.com/junegunn/fzf#preview-window>
@@ -131,3 +139,5 @@ this tool relies upon.
 "dahlia/iterfzf: Pythonic interface to fzf, a CLI fuzzy finder"
 [gen]: <https://realpython.com/introduction-to-python-generators/>
 "Real Python: How to use generators and yield in Python"
+[template]: <https://github.com/gikeymarcia/super-python-project-template>
+"Super Python Project Template @ GitHub"
