@@ -20,62 +20,45 @@ def stream_to_stdin(items: Iterable[str], command: List[str]) -> Optional[str]:
     """
     Stream each Iteralbe item into the standard in for the given command.
 
-    Each item is appended with a '\n' and utf-8' encoded before streamed in.
+    Each item is appended with a '\\n' and 'utf-8' encoded before streamed in.
 
     Uses low-level subprocess.Popen(). If the process is interrupted or
     completes with an error code the None value will be returned. Otherwise,
     the byte output of Popen.stdout is decoded into a string and returned.
 
     """
-    proc = sp.Popen(command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
-    stdin, stdout = proc.stdin, proc.stdout
+    process = sp.Popen(command, stdin=sp.PIPE, stdout=sp.PIPE, stderr=None)
+    stdin, stdout = process.stdin, process.stdout
     line_return, new_line = "\r", "\n"
-    if proc is not None and stdin is not None and stdout is not None:
+    if process is not None and stdin is not None and stdout is not None:
         for i in items:
             if new_line in i or line_return in i:
                 raise ValueError("no line breaks within an item.")
             else:
                 try:
+                    # write each item to standard in as a utf-8 encoded bytestream
                     stdin.write(i.encode("utf-8") + b"\n")
                     stdin.flush()
                 except IOError as e:
                     if e.errno != errno.EPIPE and errno.EPIPE != 32:
                         raise
-            poll = proc.poll()
-            if poll in [1, 2, 130]:
+            poll_process_status = process.poll()
+            if poll_process_status in [1, 2, 130]:
                 # fzf returns 130 when interrupted with Ctrl+c
                 return None
-            elif poll == 0:
+            elif poll_process_status == 0:
                 return stdout.read().decode()
         try:
             stdin.close()
         except IOError as e:
             if e.errno != errno.EPIPE and errno.EPIPE != 32:
                 raise
-        if proc is None or proc.wait() not in [0, 1]:
+        if process is None or process.wait() not in [0, 1]:
             return None
         elif stdout is not None:
             return stdout.read().decode()
         else:
             return None
-
-
-def newline_joined_bytestream(menu_items: Iterable[str]) -> bytes:
-    """Takes an Iterable[str] and returns a bytestream suitable for standard in
-
-    Joins all strings with '\n' then encodes as a utf-8 bytestream.
-    Good for subprocess.run(input=) use
-    """
-    line_return, new_line = "\r", "\n"
-
-    def ready_to_join(list_item: str) -> str:
-        if new_line in list_item or line_return in list_item:
-            err = f"Newlines not allowed within items. Found in\n{list_item}"
-            raise ValueError(err)
-        else:
-            return list_item
-
-    return "\n".join([ready_to_join(i) for i in menu_items]).encode("utf-8")
 
 
 def command_input(_: List[str]) -> List[str]:
@@ -92,4 +75,4 @@ def command_input(_: List[str]) -> List[str]:
     raise NotImplementedError
 
 
-__all__ = ["newline_joined_bytestream", "missing_binary", "stream_to_stdin"]
+__all__ = ["missing_binary", "stream_to_stdin"]
