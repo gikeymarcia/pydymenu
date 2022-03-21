@@ -20,10 +20,10 @@ class FzfProtocol(Menu):
     def __init__(
         self,
         items: Iterable[str],
-        prompt: str = None,
+        prompt: Optional[str] = None,
         multi: bool = False,
         case_sensitive: bool = False,
-        preview: str = None,
+        preview: Optional[str] = None,
     ):
         self.items = items
         self.prompt = " > " if prompt is None else prompt
@@ -56,10 +56,10 @@ class FzfProtocol(Menu):
 
 def fzf_func(
     items: Iterable[str],
-    prompt: str = None,
+    prompt: Optional[str] = None,
     multi: bool = False,
     case_sensitive: bool = False,
-    preview: str = None,
+    preview: Optional[str] = None,
 ) -> Optional[List[str]]:
     """Launches a `fzf` process and returns either List[str] or None."""
     fuzzy_finder = FzfProtocol(

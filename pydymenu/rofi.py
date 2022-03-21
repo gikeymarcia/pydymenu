@@ -20,7 +20,7 @@ class RofiProtocol(Menu):
     def __init__(
         self,
         items: Iterable[str],
-        prompt: str = None,
+        prompt: Optional[str] = None,
         multi: bool = False,
         case_sensitive: bool = False,
     ):
@@ -56,7 +56,7 @@ class RofiProtocol(Menu):
 
 def rofi_func(
     items: Iterable[str],
-    prompt: str = None,
+    prompt: Optional[str] = None,
     multi: bool = False,
     case_sensitive: bool = False,
 ):

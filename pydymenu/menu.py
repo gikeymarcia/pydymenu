@@ -9,7 +9,7 @@ class Menu(Protocol):
     def __init__(
         self,
         items: Iterable[str],
-        prompt: str,
+        prompt: Optional[str],
         multi: bool,
         case_sensitive: bool,
         **kwargs
