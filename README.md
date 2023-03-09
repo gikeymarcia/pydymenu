@@ -45,20 +45,22 @@ choice = pydymenu.rofi(with_a_list, prompt="Which fruit? ")
 
 My favorite way to use this tool is with a dictionary of values. Python makes it
 easy to select from a list of human-readable names but retrieve programming
-related values like int, float, or even your own custom objects.
+related values like lambda, lists, or dictionaries, or even your own custom
+objects!
 
 ```python
-with_dict = {
-    "big number": 1_000_000_000,
-    "home": Path().home(),
-    "author": "Mikey Garcia",
+import pydymenu
+
+from_dict = {
+    "Coder": {"First": "Mikey", "Last": "Garcia", "alignment": "chaotic good"},
+    "square()": lambda x: x*x,
+    "List of fruits": ["apples", "grapes", "bananas", "pears", "strawberries"],
+    "rofi selector": pydymenu.rofi,
+    "fzf selector": pydymenu.fzf,
 }
-choice = pydymenu.fzf(
-    [name for name, _ in with_dict.items()],
-    prompt="Which option? ",
-)
+choice = pydymenu.fzf(from_dict, prompt="Which option? ")
 if choice:
-    value = with_dict[choice[0]]
+    value = from_dict[choice[0]]
     print(f"{choice[0]}: {value}")
 else:
     print("No selection made.")
